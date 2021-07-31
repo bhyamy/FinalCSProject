@@ -60,4 +60,5 @@ crashlytics-build.properties
 
 # Ignore .idea folder
 DecisionMaker/.idea/
+.idea/
 

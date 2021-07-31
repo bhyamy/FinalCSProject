@@ -5,7 +5,7 @@ public class SoundExecute : MonoBehaviour
 {
     [Range(0f, 1f)]
     float value;
-    public Decision manager;
+    public Executor manager;
     AudioSource source;
 
     // Start is called before the first frame update

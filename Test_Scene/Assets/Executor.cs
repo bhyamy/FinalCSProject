@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Decision : MonoBehaviour
+public class Executor : MonoBehaviour
 {
     public Dictionary<string, float> valuesMap;
     [Range(0f, 1f)]
