@@ -11,7 +11,10 @@ class FFTProcessor(Processor):
         self.client.send(EEG_GET_DATA_MSG)
         response = self.client.recv(EEG_BUFFER_SIZE)
 
-        data = ''
-        data += response.decode(FORMAT)
-        data = np.ndarray(data).reshape((64, 8))
+        msg = ''
+        msg += response.decode(FORMAT)
+        data = np.mat(msg)
+        # incoming is 8 (samples) X 71 (channels - 64 EEG + 7 GSR)
+        # take EEG channels i.e. 1-64
+        data = np.delete(data, np.s_[64:72], 1)
         self.processed_data = np.fft.fft2(data)
