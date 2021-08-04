@@ -4,10 +4,33 @@ from cnfigs import EEG_DISCONNECT_MSG
 
 
 class Processor(ABC):
+    """
+    An abstract class used to process incoming data.
+
+    ...
+
+    Attributes
+    ----------
+    client : socket
+        a client to request real-time information from the EEG
+    processed_data : None
+        the data after it had been processed, type will be determined by implementing class
+
+    Methods
+    -------
+    process()
+        Process the real-time data
+    get_processed_data()
+        Returns the processed data
+    connect(ip, port)
+        Connects to socket
+    disconnect()
+        Disconnects from socket
+    """
     def __init__(self, ip, port):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.processed_data = None
         self.connect(ip, port)
+        self.processed_data = None
 
     @abstractmethod
     def process(self):
