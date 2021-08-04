@@ -1,6 +1,6 @@
 import socket
 import threading
-from cnfigs import FORMAT, UNITY_IP, UNITY_PORT, UNITY_BUFFER_SIZE, UNITY_REQUEST, UNITY_DISCONNECT
+from Manager.cnfigs import FORMAT, UNITY_IP, UNITY_PORT, UNITY_BUFFER_SIZE, UNITY_REQUEST, UNITY_DISCONNECT
 
 
 class MyServer(object):
