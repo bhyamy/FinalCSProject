@@ -5,15 +5,13 @@ import time
 
 
 def manage():
-    processor = FFTProcessor(EEG_IP, EEG_PORT)
-    decision_maker = EasyDecision(processor, (UNITY_IP, UNITY_PORT))
+    decision_maker = EasyDecision(FFTProcessor(), (UNITY_IP, UNITY_PORT), (EEG_IP, EEG_PORT))
 
     while decision_maker.is_connected():
         decision_maker.take_decision()
         time.sleep(1)
 
-    processor.disconnect()
-
+    decision_maker.disconnect_from_eeg()
 
 if __name__ == '__main__':
     manage()

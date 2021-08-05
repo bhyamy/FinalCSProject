@@ -26,5 +26,5 @@ class QueueServer(Server):
             elif msg is not '':
                 print("error - Unity input is not handled.")
 
-    def put_in_queue(self,name, value):
+    def put_in_queue(self, name, value):
         self.update_queue.put((name, value))
