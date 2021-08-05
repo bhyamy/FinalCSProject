@@ -10,10 +10,10 @@ class QueueServer(Server):
 
     def serve_client(self):
         msg = ''
-        while not self.server.empty():
+        while not self.__update_queue.empty():
             name, value = self.update_queue.get()
             msg = msg + ',' + name + ',' + value
-        self.server.send(msg)
+        self.server.send(msg[1:])
 
     def server_loop(self):
         while True:

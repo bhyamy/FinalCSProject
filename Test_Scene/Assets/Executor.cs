@@ -17,8 +17,7 @@ public class Executor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        client = new MyTCPClient("localhost", 5002);
-        client.GetData();
+        client = new MyTCPClient("localhost", 5000);
     }
 
     // Update is called once per frame
@@ -28,10 +27,15 @@ public class Executor : MonoBehaviour
     }
 
     void UpdateValues() {
+        client.AskForData();
         while (!client.IsQEmpty())
         {
             var change = client.GetChange();
             valuesMap[change.Item1] = change.Item2;
         }
+    }
+
+    private void OnApplicationQuit() {
+        client.Disconnect();
     }
 }
