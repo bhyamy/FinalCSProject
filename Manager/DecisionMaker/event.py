@@ -1,8 +1,7 @@
-from abc import ABC, abstractmethod
 from Manager.cnfigs import EEG_SAMPLING_RATE
 
 
-class Event(ABC):
+class Event(object):
     """
     This is an event class representing an event occurring in the VR.
 
