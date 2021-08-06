@@ -14,10 +14,7 @@ server.bind(ADDR)
 
 
 def handle_client(conn, addr):
-    connected = True
-
-    while connected:
-
+    while True:
         msg = conn.recv(SIZE).decode(FORMAT)
         if msg == REQUEST:
             send_msg = 'WOOHOO'.encode(FORMAT)

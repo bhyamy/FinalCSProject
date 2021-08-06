@@ -27,4 +27,10 @@ class FFTProcessor(Processor):
         data = np.mat(data)
         # delete channels 65-71 of the GSR
         data = np.delete(data, np.s_[64:72], 1)
-        self.processed_data = np.fft.fft2(data)
+        max_amp = []
+        for channel in data.T:
+            X = np.fft.fft(channel)
+            X = np.abs(X)
+            max_amp.append(max(X))
+
+        self.processed_data = max_amp

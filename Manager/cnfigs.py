@@ -8,8 +8,8 @@ UNITY_DISCONNECT = '0'
 
 EEG_PORT = 8080
 EEG_IP = ''
-EEG_GET_DATA_MSG = bytes('1', encoding='utf8')
-EEG_DISCONNECT_MSG = bytes('0', encoding='utf8')
+EEG_GET_DATA_MSG = bytes('1', encoding='utf-8')
+EEG_DISCONNECT_MSG = bytes('0', encoding='utf-8')
 EEG_BUFFER_SIZE = 20000
 EEG_SAMPLING_RATE = 1
 EEG_SAMPLING_NUM = 512
