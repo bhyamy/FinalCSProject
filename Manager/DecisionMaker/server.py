@@ -1,6 +1,5 @@
 import socket
 from Manager.cnfigs import FORMAT, UNITY_BUFFER_SIZE
-import threading
 
 
 class Server(object):
@@ -42,4 +41,7 @@ class Server(object):
 
     def get_message(self):
         """Get the message message from client"""
+        # msg = ''
+        # response = self.connection.recv(UNITY_BUFFER_SIZE)
+        # msg += response.decode(FORMAT)
         return self.connection.recv(UNITY_BUFFER_SIZE).decode(FORMAT)

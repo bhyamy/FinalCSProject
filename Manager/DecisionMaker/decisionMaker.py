@@ -29,7 +29,7 @@ class DecisionMaker(ABC):
         is_unity_connected()
             Checks if VR client is connected
         disconnect_from_eeg()
-            Disconnects from socket 
+            Disconnects from socket
     """
     def __init__(self, processor, server_address, client_address):
         self.processor = processor
