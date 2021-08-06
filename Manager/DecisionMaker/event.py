@@ -56,11 +56,11 @@ class Event(object):
         tuple
             A tuple of 4 elements representing the Event object.
         """
-        min_range = float(instruction[0])
-        max_range = float(instruction[1])
+        min_range = int(instruction[0])
+        max_range = int(instruction[1])
         threshold = float(instruction[2])
         name = instruction[3]
-        value = instruction[4]
+        value = max(0, min(float(instruction[4]), 1))
         return (min_range, max_range), threshold, name, value
 
     def should_be_activated(self, processed_data):

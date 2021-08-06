@@ -34,7 +34,7 @@ class DecisionMaker(ABC):
     def __init__(self, processor, server_address, client_address):
         self.processor = processor
         self.__server = QueueServer(server_address)
-        self.__server_thread = threading.Thread(self.__server.server_loop())
+        self.__server_thread = threading.Thread(self.__server.server_loop(self.__server))
         self.__server_thread.start()
         self.__eeg_client = Client(client_address)
 

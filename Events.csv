@@ -1,2 +1,4 @@
-﻿min range,max range,threshold,object name,value
+﻿min_range,max_range,threshold,object name,value
 8,12,20,main_speaker,0.8
+1,8,9,player_2,1.2
+10,12,9,player_2, 0
