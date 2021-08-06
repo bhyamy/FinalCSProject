@@ -27,8 +27,8 @@ class EasyDecision(DecisionMaker):
         analyze(processed_data)
             Analyzes whether or not to add an event to the list of activated event.
     """
-    def __init__(self, processor, address, path):
-        super(processor, address)
+    def __init__(self, processor, server_address, path, client_address):
+        super(EasyDecision, self).__init__(processor, server_address, client_address)
         self.event_list = self.__parse_events(path)
 
     @staticmethod

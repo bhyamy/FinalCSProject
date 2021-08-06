@@ -15,4 +15,4 @@ EEG_SAMPLING_RATE = 1024
 EEG_SAMPLING_NUM = 512
 EEG_ELECTRODE_NUM = 64
 
-PATH = 'D:\Coding_Projects\FinalCSProject\Events.csv'
+PATH = '..\..\Events.csv'

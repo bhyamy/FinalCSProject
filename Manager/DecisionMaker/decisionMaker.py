@@ -34,7 +34,7 @@ class DecisionMaker(ABC):
     def __init__(self, processor, server_address, client_address):
         self.processor = processor
         self.__server = QueueServer(server_address)
-        self.__server_thread = threading.Thread(self.server.server_loop())
+        self.__server_thread = threading.Thread(self.__server.server_loop())
         self.__server_thread.start()
         self.__eeg_client = Client(client_address)
 
@@ -45,7 +45,7 @@ class DecisionMaker(ABC):
     def update(self, pairs_list):
         """Updates to __server the desired updates"""
         for name, value in pairs_list:
-            self.server.put_in_queue(name, value)
+            self.__server.put_in_queue(name, value)
 
     def take_decision(self):
         """Takes decisions based on processed data and analyzing it"""
@@ -56,7 +56,7 @@ class DecisionMaker(ABC):
 
     def is_unity_connected(self):
         """Checks if VR client is connected"""
-        return self.server_thread.is_alive()
+        return self.__server_thread.is_alive()
 
     def disconnect_from_eeg(self):
         """Disconnects from socket"""
