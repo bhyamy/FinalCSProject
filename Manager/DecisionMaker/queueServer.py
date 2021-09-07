@@ -1,3 +1,4 @@
+import time
 from Manager.DecisionMaker.server import Server
 from Manager.cnfigs import UNITY_REQUEST, UNITY_DISCONNECT, FORMAT
 import queue
@@ -40,14 +41,19 @@ class QueueServer(Server):
         msg = ''
         while not self.__update_queue.empty():
             name, value = self.__update_queue.get()
-            msg = msg + ',' + name + ',' + value
+            msg = msg + ',' + name + ',' + str(value)
         # lose first comma
-        msg = msg[1:]
-        send_msg = msg.encode(FORMAT)
-        length = len(send_msg)
-        send_length = str(length).encode(FORMAT)
-        self.connection.send(send_length)
-        self.connection.send(send_msg)
+        if msg != '':
+            msg = msg[1:]
+            send_msg = msg.encode(FORMAT)
+            """
+            length = len(send_msg)
+            send_length = str(length).encode(FORMAT)
+            self.connection.send(send_length)
+            """
+            self.connection.send(send_msg)
+        else:
+            self.connection.send('-'.encode(FORMAT))
 
     def server_loop(self):
         """A loop that constantly runs until a disconnection request comes"""
@@ -59,14 +65,19 @@ class QueueServer(Server):
                 elif msg == UNITY_DISCONNECT:
                     print("Unity client is disconnected.")
                     break
-                # for testing
-                elif msg == '2':
-                    self.put_in_queue('Dor', '0.5')
                 elif msg != '':
                     print("error - Unity input is not handled.")
             except Exception as e:
                 print(e.with_traceback(e.__traceback__))
+            time.sleep(0)
 
     def put_in_queue(self, name, value):
         """Inserts tuple of strings to queue"""
         self.__update_queue.put((name, value))
+
+
+'''
+# for testing
+elif msg == '2':
+    self.put_in_queue('Dor', '0.5')
+'''

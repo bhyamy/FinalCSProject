@@ -24,11 +24,10 @@ class FFTProcessor(Processor):
             data: string
                 A string representation of the recorded data from the EEG and GSR
         """
-        data = np.mat(data)
         # delete channels 65-71 of the GSR
-        data = np.delete(data, np.s_[64:72], 1)
+        relevant_data = np.delete(data, np.s_[64:72], 1)
         max_amp = []
-        for channel in data.T:
+        for channel in relevant_data.T:
             X = np.fft.fft(channel)
             X = np.abs(X)
             max_amp.append(max(X))

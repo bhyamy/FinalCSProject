@@ -33,10 +33,11 @@ class DecisionMaker(ABC):
     """
     def __init__(self, processor, server_address, client_address):
         self.processor = processor
-        self.__server = QueueServer(server_address)
-        self.__server_thread = threading.Thread(self.__server.server_loop(self.__server))
-        self.__server_thread.start()
         self.__eeg_client = Client(client_address)
+        self.__server = QueueServer(server_address)
+        self.__server_thread = threading.Thread(target=self.__server.server_loop)
+        self.__server_thread.start()
+
 
     @abstractmethod
     def analyze(self, processed_data):
@@ -49,10 +50,16 @@ class DecisionMaker(ABC):
 
     def take_decision(self):
         """Takes decisions based on processed data and analyzing it"""
-        data = self.__eeg_client.get_eeg_data()
-        processed_data = self.processor.process_data(data)
-        pairs_list = self.analyze(processed_data)
-        self.update(pairs_list)
+        try:
+            data = self.__eeg_client.get_eeg_data()
+            processed_data = self.processor.process_data(data)
+            pairs_list = self.analyze(processed_data)
+            self.update(pairs_list)
+        except ValueError as e:
+            print('Value error')
+            print(e.with_traceback(e.__traceback__))
+        except Exception as e:
+            print(e.with_traceback(e.__traceback__))
 
     def is_unity_connected(self):
         """Checks if VR client is connected"""
@@ -61,3 +68,6 @@ class DecisionMaker(ABC):
     def disconnect_from_eeg(self):
         """Disconnects from socket"""
         self.__eeg_client.disconnect_from_eeg()
+
+    def wait_for_server(self):
+        self.__server_thread.join()

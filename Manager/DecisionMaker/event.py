@@ -77,7 +77,7 @@ class Event(object):
                 True if max amplitude is above threshold, False otherwise.
         """
         for i in range(self.__range[0] * EEG_SAMPLING_RATE, self.__range[1] * EEG_SAMPLING_RATE + 1):
-            if processed_data[i] > self.__threshold:
+            if len(processed_data) > i and processed_data[i] > self.__threshold:
                 return True
         return False
 

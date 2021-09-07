@@ -27,9 +27,9 @@ class EasyDecision(DecisionMaker):
         analyze(processed_data)
             Analyzes whether or not to add an event to the list of activated event.
     """
-    def __init__(self, processor, server_address, path, client_address):
-        super(EasyDecision, self).__init__(processor, server_address, client_address)
+    def __init__(self, processor, server_address, client_address, path):
         self.event_list = self.__parse_events(path)
+        super(EasyDecision, self).__init__(processor, server_address, client_address)
 
     @staticmethod
     def __parse_events(path):
@@ -51,7 +51,8 @@ class EasyDecision(DecisionMaker):
         event_list = []
         with open(path, newline='') as csv_file:
             reader = csv.reader(csv_file)
-            for event in reader[1:]:
+            next(reader)
+            for event in reader:
                 event_list.append(Event(event))
         return event_list
 
@@ -75,4 +76,4 @@ class EasyDecision(DecisionMaker):
         for event in self.event_list:
             if event.should_be_activated(processed_data):
                 activated_events.append(event.get_change())
-            return activated_events
+        return activated_events
