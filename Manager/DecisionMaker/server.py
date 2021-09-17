@@ -28,8 +28,10 @@ class Server(object):
         """
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(address)
-        self.server.listen()
+        self.server.listen(1)
+        print("listening...")
         self.connection, _ = self.server.accept()
+        print("ACCEPTED!")
 
     def send(self, msg):
         """Send message to client"""

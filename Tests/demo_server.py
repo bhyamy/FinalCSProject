@@ -1,35 +1,64 @@
+"""
+A demo server for unity update loop testing
+"""
 import socket
 import threading
+import keyboard
 
-SIZE = 1
-PORT = 8080
+SIZE = 1024
+PORT = 5001
 SERVER = 'localhost'
-ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 REQUEST = '1'
 DISCONNECT = '0'
 
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
 
 
 def handle_client(conn, addr):
     while True:
-        msg = conn.recv(SIZE).decode(FORMAT)
-        if msg == REQUEST:
-            send_msg = 'WOOHOO'.encode(FORMAT)
-            length = len(send_msg)
-            send_length = str(length).encode(FORMAT)
-            server.send(send_length)
-            server.send(send_msg)
-        elif msg == DISCONNECT:
-            break
-
+        try:
+            msg = conn.recv(SIZE).decode(FORMAT)
+            if msg == REQUEST:
+                if keyboard.is_pressed('\n'):
+                    while keyboard.is_pressed('\n'):
+                        pass
+                    send_msg = 'sound_source_1,1,sound_source_2,0,Light_source_1,1,Light_source_2,0'
+                elif keyboard.is_pressed(' '):
+                    while keyboard.is_pressed(' '):
+                        pass
+                    send_msg = 'sound_source_1,0,sound_source_2,1,Light_source_1,0,Light_source_2,1'
+                elif keyboard.is_pressed('a'):
+                    while keyboard.is_pressed('a'):
+                        pass
+                    send_msg = 'sound_source_1,1,sound_source_2,1,Light_source_1,1,Light_source_2,1'
+                elif keyboard.is_pressed('n'):
+                    while keyboard.is_pressed(' '):
+                        pass
+                    send_msg = 'sound_source_1,0,sound_source_2,0,Light_source_1,0,Light_source_2,0'
+                else:
+                    send_msg = '-'
+                """
+                length = len(send_msg)
+                send_length = str(length).encode(FORMAT)
+                conn.send(send_length)
+                """
+                send = send_msg.encode(FORMAT)
+                conn.send(send)
+            elif msg == DISCONNECT:
+                print('client disconnected')
+                break
+        except Exception as e:
+            print(e)
+    print('closing server...')
     conn.close()
+    print('server is closed!')
 
 
 if __name__ == '__main__':
-    server.listen()
+    server.bind((SERVER, PORT))
+    server.listen(1)
     print("listening...")
     conn, addr = server.accept()
     print("ACCEPTED!")

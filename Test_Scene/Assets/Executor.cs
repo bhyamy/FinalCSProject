@@ -5,11 +5,9 @@ using UnityEngine;
 public class Executor : MonoBehaviour
 {
     public Dictionary<string, float> valuesMap;
-    [Range(0f, 1f)]
-    public float volumeCheck1;
-    [Range(0f, 1f)]
-    public float volumeCheck2;
     public MyTCPClient client;
+
+    private bool paused = false;
 
     private void Awake() {
         valuesMap = new Dictionary<string, float>();
@@ -17,13 +15,16 @@ public class Executor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        client = new MyTCPClient("localhost", 5000);
+        client = new MyTCPClient("localhost", 5001);
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateValues();
+        if (!this.paused)
+        {
+            UpdateValues();
+        }
     }
 
     void UpdateValues() {
@@ -37,5 +38,15 @@ public class Executor : MonoBehaviour
 
     private void OnApplicationQuit() {
         client.Disconnect();
+    }
+
+    public void Pause() {
+        this.paused = true;
+        this.client.Pause();
+    }
+
+    public void Continue() {
+        this.paused = false;
+        this.client.Continue();
     }
 }

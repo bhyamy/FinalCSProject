@@ -56,11 +56,11 @@ class Event(object):
         tuple
             A tuple of 4 elements representing the Event object.
         """
-        min_range = float(instruction[0])
-        max_range = float(instruction[1])
+        min_range = int(instruction[0])
+        max_range = int(instruction[1])
         threshold = float(instruction[2])
         name = instruction[3]
-        value = instruction[4]
+        value = max(0, min(float(instruction[4]), 1))
         return (min_range, max_range), threshold, name, value
 
     def should_be_activated(self, processed_data):
@@ -77,7 +77,7 @@ class Event(object):
                 True if max amplitude is above threshold, False otherwise.
         """
         for i in range(self.__range[0] * EEG_SAMPLING_RATE, self.__range[1] * EEG_SAMPLING_RATE + 1):
-            if processed_data[i] > self.__threshold:
+            if len(processed_data) > i and processed_data[i] > self.__threshold:
                 return True
         return False
 

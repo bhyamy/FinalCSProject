@@ -11,11 +11,11 @@ public class MyTCPClient {
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
 	private ConcurrentQueue<(string, float)> q;
-	private bool needData = true;
 
     // ctor
     public MyTCPClient(string ip, int port) {
-        try
+        this.q = new ConcurrentQueue<(string, float)>();
+		try
         {
             socketConnection = new TcpClient(ip, port);
 			this.clientReceiveThread = new Thread(new ThreadStart(GetData));
@@ -40,7 +40,7 @@ public class MyTCPClient {
 	}
 	public bool IsQEmpty() {return q.IsEmpty;}
     private void GetData() {
-        while (needData) { 			 			
+        while (true) { 			 			
 			Byte[] bytes = new Byte[1024];             
 			try { 			
 
@@ -48,11 +48,12 @@ public class MyTCPClient {
 				using (NetworkStream stream = socketConnection.GetStream()) { 					
 					int length; 					
 					// Read incomming stream into byte arrary. 					
-					while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) { 						
+					while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) { 					
 						var incommingData = new byte[length]; 						
 						Array.Copy(bytes, 0, incommingData, 0, length); 						
 						// Convert byte array to string message. 						
-						string serverMessage = Encoding.ASCII.GetString(incommingData); 						
+						string serverMessage = Encoding.ASCII.GetString(incommingData);
+						if (serverMessage.Equals("-")) continue; // if there are  no changes	 						
 						Dictionary<string, float> values = StrToList(serverMessage);
 						foreach(var key in values.Keys) {
 							q.Enqueue((key, values[key]));
@@ -61,7 +62,8 @@ public class MyTCPClient {
 				} 			
 			}  catch (SocketException socketException) {             
 			Debug.Log("Socket exception: " + socketException);         
-			}   
+			}  
+			Thread.Sleep(1000);
 		}           
     }
 
@@ -86,9 +88,11 @@ public class MyTCPClient {
 	}
 
 	public void Disconnect() {
-		needData = false;
-		this.clientReceiveThread.Join();
+		Debug.Log("terminating update thread");
+		this.clientReceiveThread.Abort();
+		Debug.Log("disconnecting from the server");
 		SendMessage("0");
+		this.socketConnection.Close();
 	}
 
     private Dictionary<string, float> StrToList(string message) {
@@ -96,7 +100,7 @@ public class MyTCPClient {
         List<string> result = new List<String>(message.Split(','));
 		for (int i = 0; i < result.Count; i+=2)
 		{
-			map.Add(result[i], float.Parse(result[i+1]));
+			map[result[i]] = float.Parse(result[i+1]);
 		}
 		return map;
     }
@@ -104,4 +108,13 @@ public class MyTCPClient {
 	public void AskForData() {
 		SendMessage("1");
 	}
+
+	public void Pause() {
+		this.clientReceiveThread.Suspend();
+	}
+
+	public void Continue() {
+		this.clientReceiveThread.Resume();
+	}
 }
+

@@ -1,5 +1,8 @@
 import socket
+import time
+
 from Manager.cnfigs import EEG_DISCONNECT_MSG, EEG_GET_DATA_MSG, EEG_BUFFER_SIZE, FORMAT
+import numpy as np
 
 
 class Client(object):
@@ -31,12 +34,25 @@ class Client(object):
         self.client.connect(client_address)
 
     def disconnect_from_eeg(self):
-        self.client.send(EEG_DISCONNECT_MSG)
+        self.client.send(EEG_DISCONNECT_MSG.encode(FORMAT))
+        time.sleep(1)
         self.client.close()
 
     def get_eeg_data(self):
         data = ''
-        self.client.send(EEG_GET_DATA_MSG)
+        self.client.send(EEG_GET_DATA_MSG.encode(FORMAT))
         response = self.client.recv(EEG_BUFFER_SIZE)
         data += response.decode(FORMAT)
+        if data == '':
+            return []
+        print('data in client as string is:\n' + data)
+        data = np.mat(data)
+        print('data in client as string is:')
+        print(data)
         return data
+
+    def send_msg(self, msg):
+        self.client.send(msg)
+
+    def close_conn(self):
+        self.client.close()
