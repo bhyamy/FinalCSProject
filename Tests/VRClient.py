@@ -3,7 +3,8 @@ import keyboard
 import numpy as np
 
 
-PORT = 8080
+PORT = 5002
+
 SERVER = '192.168.1.20'
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
