@@ -1,7 +1,7 @@
 import time
-from Manager.DecisionMaker.server import Server
-from Manager.cnfigs import UNITY_REQUEST, UNITY_DISCONNECT, FORMAT
 import queue
+from Manager.DecisionMaker.server import Server
+from singletons import Config
 
 
 class QueueServer(Server):
@@ -33,6 +33,10 @@ class QueueServer(Server):
         """
         super().__init__(address)
         self.__update_queue = queue.Queue()
+        confs = Config()
+        self.request = confs.configs['UNITY']['REQUEST']
+        self.disconnect = confs.configs['UNITY']['DISCONNECT']
+        self.format = confs.configs['FORMAT']
 
     def serve_client(self):
         """Empties update queue and sends the updates to the client as a concatenated string
@@ -45,7 +49,7 @@ class QueueServer(Server):
         # lose first comma
         if msg != '':
             msg = msg[1:]
-            send_msg = msg.encode(FORMAT)
+            send_msg = msg.encode(self.format)
             """
             length = len(send_msg)
             send_length = str(length).encode(FORMAT)
@@ -53,16 +57,16 @@ class QueueServer(Server):
             """
             self.connection.send(send_msg)
         else:
-            self.connection.send('-'.encode(FORMAT))
+            self.connection.send('-'.encode(self.format))
 
     def server_loop(self):
         """A loop that constantly runs until a disconnection request comes"""
         while True:
             try:
                 msg = self.get_message()
-                if msg == UNITY_REQUEST:
+                if msg == self.request:
                     self.serve_client()
-                elif msg == UNITY_DISCONNECT:
+                elif msg == self.disconnect:
                     print("Unity client is disconnected.")
                     break
                 elif msg != '':

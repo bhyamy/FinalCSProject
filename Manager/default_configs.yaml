@@ -1,0 +1,24 @@
+[FORMAT]
+FORMAT = 'utf-8'
+
+[UNITY]
+BUFFER_SIZE = 512    # buffer size of data sent to unity
+PORT = 5001
+IP = 'localhost'
+REQUEST = '1'        # received request from unity
+DISCONNECT = '0'     # disconnect message from unity
+
+[EEG]
+# (can also have GSR or others)
+PORT = 5002
+IP = '192.168.1.20'  # 'localhost' for testing
+REQUEST = '1'        # request data from eeg
+DISCONNECT = '0'     # disconnect from eeg
+BUFFER_SIZE = 20000  # data buffer size
+SAMPLING_RATE = 1
+SAMPLING_NUM = 16
+ELECTRODE_NUM = 64
+
+[PATH]
+# (to events)
+PATH = 'Events.csv'

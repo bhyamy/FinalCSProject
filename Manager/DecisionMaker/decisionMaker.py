@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from Manager.DecisionMaker.queueServer import QueueServer
 from Manager.DecisionMaker.client import Client
 import threading
+import datetime
+from time import perf_counter
+from singletons import Logger
 
 
 class DecisionMaker(ABC):
@@ -37,7 +40,7 @@ class DecisionMaker(ABC):
         self.__server = QueueServer(server_address)
         self.__server_thread = threading.Thread(target=self.__server.server_loop)
         self.__server_thread.start()
-
+        self.logger = Logger()
 
     @abstractmethod
     def analyze(self, processed_data):
@@ -51,9 +54,34 @@ class DecisionMaker(ABC):
     def take_decision(self):
         """Takes decisions based on processed data and analyzing it"""
         try:
+            # TODO - ask Yair about how much verbosity is needed!
+            # get data from server
+            start_time = perf_counter()
+            self.logger.print(f'Get Data Request sent at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
             data = self.__eeg_client.get_eeg_data()
+            end_time = perf_counter()
+
+            self.logger.print(f'Data Received at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            self.logger.print(f'Data is:\n {data}')
+            self.logger.print(f'Time elapsed in seconds: {start_time - end_time}')
+            self.logger.print(
+                f'Processing and analyzing started at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+
+            # process and analyze data
+            start_time = perf_counter()
+
             processed_data = self.processor.process_data(data)
             pairs_list = self.analyze(processed_data)
+
+            end_time = perf_counter()
+
+            self.logger.print(
+                f'Processing and analyzing finished at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+            self.logger.print(f'Time elapsed in seconds: {start_time - end_time}')
+
+            self.logger.add_to_buffer(str(data))
+            self.logger.add_to_buffer(str(pairs_list))
+
             self.update(pairs_list)
         except ValueError as e:
             print('Value error')

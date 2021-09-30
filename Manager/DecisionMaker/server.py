@@ -1,5 +1,5 @@
 import socket
-from Manager.cnfigs import FORMAT, UNITY_BUFFER_SIZE
+from singletons import Config
 
 
 class Server(object):
@@ -32,6 +32,9 @@ class Server(object):
         print("listening...")
         self.connection, _ = self.server.accept()
         print("ACCEPTED!")
+        confs = Config()
+        self.format = confs.configs['FORMAT']
+        self.buffer_size = confs.configs['UNITY']['BUFFER_SIZE']
 
     def send(self, msg):
         """Send message to client"""
@@ -43,7 +46,4 @@ class Server(object):
 
     def get_message(self):
         """Get the message message from client"""
-        # msg = ''
-        # response = self.connection.recv(UNITY_BUFFER_SIZE)
-        # msg += response.decode(FORMAT)
-        return self.connection.recv(UNITY_BUFFER_SIZE).decode(FORMAT)
+        return self.connection.recv(self.buffer_size).decode(self.format)

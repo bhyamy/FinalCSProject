@@ -1,8 +1,7 @@
 import socket
 import time
-
-from Manager.cnfigs import EEG_DISCONNECT_MSG, EEG_GET_DATA_MSG, EEG_BUFFER_SIZE, FORMAT
 import numpy as np
+from singletons import Config
 
 
 class Client(object):
@@ -29,6 +28,11 @@ class Client(object):
     def __init__(self, address):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect_to_eeg(address)
+        confs = Config()
+        self.format = confs.configs['FORMAT']
+        self.disconnect_msg = confs.configs['EEG']['DISCONNECT']
+        self.buffer_size = confs.configs['EEG']['BUFFER_SIZE']
+        self.get_data_msg = confs.configs['EEG']['REQUEST']
 
     def connect_to_eeg(self, client_address):
         self.client.connect(client_address)
@@ -45,10 +49,7 @@ class Client(object):
         data += response.decode(FORMAT)
         if data == '':
             return []
-        print('data in client as string is:\n' + data)
         data = np.mat(data)
-        print('data in client as string is:')
-        print(data)
         return data
 
     def send_msg(self, msg):
