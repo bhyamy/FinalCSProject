@@ -70,6 +70,7 @@ class DecisionMaker(ABC):
             self.logger.print(
                 f'Processing and analyzing started at: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
+            eeg_status = 'eeg_connected', 1
             # process and analyze data
             start_time = perf_counter()
 
@@ -84,10 +85,6 @@ class DecisionMaker(ABC):
 
             self.logger.add_to_buffer(str(data))
             self.logger.add_to_buffer(str(pairs_list))
-
-            eeg_status = 'eeg_connected', 1
-            processed_data = self.processor.process_data(data)
-            pairs_list = self.analyze(processed_data)
         except ValueError as e:
             eeg_status = 'eeg_connected', 0
             self.logger.print('Take decision Value error')

@@ -64,6 +64,7 @@
     <option name="height" value="1050" />
   </component>
   <component name="ProjectId" id="1wWqh9GYtsgGt0wWZoQMdcwiby5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -243,11 +244,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.manager" />
-      <item itemvalue="Python.demo_server" />
       <item itemvalue="Python.client_test" />
-      <item itemvalue="Python.eeg_demo_server" />
       <item itemvalue="Python.decision_test" />
+      <item itemvalue="Python.demo_server" />
+      <item itemvalue="Python.eeg_demo_server" />
+      <item itemvalue="Python.manager" />
       <item itemvalue="Python.queueServer" />
     </list>
     <recent_temporary>
