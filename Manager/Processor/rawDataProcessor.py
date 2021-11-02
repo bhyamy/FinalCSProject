@@ -22,6 +22,8 @@ class RawDataProcessor(Processor):
             data: string
                 A string representation of the recorded data from the EEG and GSR
         """
+        """
         print('data in processor is:')
         print(data)
+        """
         self.processed_data = np.squeeze(np.asarray(data[0]))

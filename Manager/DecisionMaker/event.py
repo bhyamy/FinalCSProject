@@ -1,4 +1,4 @@
-from Manager.cnfigs import EEG_SAMPLING_RATE
+from singletons import Config
 
 
 class Event(object):
@@ -41,9 +41,11 @@ class Event(object):
         self.__threshold = threshold
         self.__name = name
         self.__value = value
+        cnfs = Config().configs
+        self.EEG_SAMPLING_RATE = cnfs['EEG']['SAMPLING_RATE']
+        self.EEG_MAX_FREQ = cnfs['EEG']['MAX_FREQ']
 
-    @staticmethod
-    def __parse_instruction(instruction):
+    def __parse_instruction(self, instruction):
         """Parses the instruction to an Event object.
 
         Parameters
@@ -56,8 +58,9 @@ class Event(object):
         tuple
             A tuple of 4 elements representing the Event object.
         """
-        min_range = int(instruction[0])
-        max_range = int(instruction[1])
+
+        min_range = int(instruction[0]) if instruction[0] != '-' else 0
+        max_range = int(instruction[1]) if instruction[1] != '-' else self.EEG_MAX_FREQ
         threshold = float(instruction[2])
         name = instruction[3]
         value = max(0, min(float(instruction[4]), 1))
@@ -76,7 +79,7 @@ class Event(object):
             bool
                 True if max amplitude is above threshold, False otherwise.
         """
-        for i in range(self.__range[0] * EEG_SAMPLING_RATE, self.__range[1] * EEG_SAMPLING_RATE + 1):
+        for i in range(self.__range[0] * self.EEG_SAMPLING_RATE, self.__range[1] * self.EEG_SAMPLING_RATE + 1):
             if len(processed_data) > i and processed_data[i] > self.__threshold:
                 return True
         return False

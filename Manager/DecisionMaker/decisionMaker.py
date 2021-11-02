@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 from Manager.DecisionMaker.queueServer import QueueServer
 from Manager.DecisionMaker.client import Client
@@ -38,6 +39,7 @@ class DecisionMaker(ABC):
         self.processor = processor
         self.__eeg_client = Client(client_address)
         self.__server = QueueServer(server_address)
+        self.last_decision_time = time.localtime(time.time())
         self.__server_thread = threading.Thread(target=self.__server.server_loop)
         self.__server_thread.start()
         self.logger = Logger()
@@ -53,6 +55,7 @@ class DecisionMaker(ABC):
 
     def take_decision(self):
         """Takes decisions based on processed data and analyzing it"""
+        pairs_list = []
         try:
             # TODO - ask Yair about how much verbosity is needed!
             # get data from server
@@ -82,12 +85,26 @@ class DecisionMaker(ABC):
             self.logger.add_to_buffer(str(data))
             self.logger.add_to_buffer(str(pairs_list))
 
-            self.update(pairs_list)
+            eeg_status = 'eeg_connected', 1
+            processed_data = self.processor.process_data(data)
+            pairs_list = self.analyze(processed_data)
         except ValueError as e:
-            print('Value error')
-            print(e.with_traceback(e.__traceback__))
+            eeg_status = 'eeg_connected', 0
+            self.logger.print('Take decision Value error')
+            self.logger.print(e.with_traceback(e.__traceback__))
+        except ConnectionError as e:
+            eeg_status = 'eeg_connected', 0
+            self.logger.print('EEG got disconnected.')
+            self.logger.print('Trying to reconnect...')
+            self.__eeg_client.connect_to_eeg()
         except Exception as e:
-            print(e.with_traceback(e.__traceback__))
+            eeg_status = 'eeg_connected', 0
+            self.logger.print('Take decision General error')
+            self.logger.print(e.with_traceback(e.__traceback__))
+        finally:
+            pairs_list.append(eeg_status)
+            self.update(pairs_list)
+            time.sleep(0)
 
     def is_unity_connected(self):
         """Checks if VR client is connected"""

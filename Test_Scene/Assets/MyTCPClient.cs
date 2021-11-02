@@ -53,7 +53,7 @@ public class MyTCPClient {
 						Array.Copy(bytes, 0, incommingData, 0, length); 						
 						// Convert byte array to string message. 						
 						string serverMessage = Encoding.ASCII.GetString(incommingData);
-						if (serverMessage.Equals("-")) continue; // if there are  no changes	 						
+						if (serverMessage.Equals("-")) continue; // if there are  no changes	 										
 						Dictionary<string, float> values = StrToList(serverMessage);
 						foreach(var key in values.Keys) {
 							q.Enqueue((key, values[key]));
@@ -79,7 +79,7 @@ public class MyTCPClient {
 				byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage); 				
 				// Write byte array to socketConnection stream.                 
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
-				Debug.Log("Client sent his message - should be received by server");             
+				//Debug.Log("Client sent his message - should be received by server");             
 			}         
 		} 		
 		catch (SocketException socketException) {             

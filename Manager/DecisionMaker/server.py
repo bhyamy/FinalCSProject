@@ -28,13 +28,21 @@ class Server(object):
         """
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(address)
-        self.server.listen(1)
-        print("listening...")
-        self.connection, _ = self.server.accept()
-        print("ACCEPTED!")
+        self.connection = None
+        self.wait_for_client()
         confs = Config()
         self.format = confs.configs['FORMAT']
         self.buffer_size = confs.configs['UNITY']['BUFFER_SIZE']
+        self.conn_timeout = confs.configs['UNITY']['CLIENT_TIMEOUT']
+        self.msg_timeout = confs.configs['UNITY']['MESSAGE_TIMEOUT']
+
+    def wait_for_client(self):
+        self.server.listen(1)
+        print("listening...")
+        self.server.settimeout(self.conn_timeout)
+        self.connection, _ = self.server.accept()
+        print("ACCEPTED!")
+        self.connection.settimeout(self.msg_timeout)
 
     def send(self, msg):
         """Send message to client"""

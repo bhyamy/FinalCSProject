@@ -1,7 +1,7 @@
 import time
-import queue
-from Manager.DecisionMaker.server import Server
 from singletons import Config
+from Manager.DecisionMaker.server import Server
+import queue
 
 
 class QueueServer(Server):
@@ -50,6 +50,7 @@ class QueueServer(Server):
         if msg != '':
             msg = msg[1:]
             send_msg = msg.encode(self.format)
+
             """
             length = len(send_msg)
             send_length = str(length).encode(FORMAT)
@@ -64,24 +65,27 @@ class QueueServer(Server):
         while True:
             try:
                 msg = self.get_message()
-                if msg == self.request:
+
+                if msg == msg == self.request:
                     self.serve_client()
                 elif msg == self.disconnect:
                     print("Unity client is disconnected.")
                     break
                 elif msg != '':
-                    print("error - Unity input is not handled.")
+                    print("Server loop error - Unity input is not handled.")
+            except ConnectionError as e:
+                print('Unity got disconnected')
+                print('waiting for Unity to reconnect...')
+                self.wait_for_client()
+            except TimeoutError as e:
+                print('Unity got disconnected')
+                print('waiting for Unity to reconnect...')
+                self.wait_for_client()
             except Exception as e:
+                print('Server loop error')
                 print(e.with_traceback(e.__traceback__))
             time.sleep(0)
 
     def put_in_queue(self, name, value):
         """Inserts tuple of strings to queue"""
         self.__update_queue.put((name, value))
-
-
-'''
-# for testing
-elif msg == '2':
-    self.put_in_queue('Dor', '0.5')
-'''
