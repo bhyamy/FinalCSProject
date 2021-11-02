@@ -42,18 +42,32 @@ public class MyTCPClient {
 						var incommingData = new byte[length]; 						
 						Array.Copy(bytes, 0, incommingData, 0, length); 						
 						// Convert byte array to string message. 						
+<<<<<<< Updated upstream
 						string serverMessage = Encoding.ASCII.GetString(incommingData); 						
+=======
+						string serverMessage = Encoding.ASCII.GetString(incommingData);
+						if (serverMessage.Equals("-")) continue; // if there are  no changes
+						Debug.Log(serverMessage);						
+>>>>>>> Stashed changes
 						Dictionary<string, float> values = StrToList(serverMessage);
 						foreach(var key in values.Keys) {
 							q.Enqueue((key, values[key]));
 						}			
 					} 				
 				} 			
+<<<<<<< Updated upstream
 			}         
 		}         
 		catch (SocketException socketException) {             
 			Debug.Log("Socket exception: " + socketException);         
 		}  
+=======
+			}  catch (SocketException socketException) {             
+			Debug.LogError("Socket exception: " + socketException);         
+			}  
+			Thread.Sleep(1000);
+		}           
+>>>>>>> Stashed changes
     }
 
 	public void SendMessage(string clientMessage) {
@@ -68,7 +82,7 @@ public class MyTCPClient {
 				byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage); 				
 				// Write byte array to socketConnection stream.                 
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
-				Debug.Log("Client sent his message - should be received by server");             
+				//Debug.Log("Client sent his message - should be received by server");             
 			}         
 		} 		
 		catch (SocketException socketException) {             

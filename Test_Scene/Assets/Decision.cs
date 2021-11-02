@@ -31,6 +31,7 @@ public class Decision : MonoBehaviour
         while (!client.IsQEmpty())
         {
             var change = client.GetChange();
+            if ()// checking if time of change is still relevent
             valuesMap[change.Item1] = change.Item2;
         }
     }
