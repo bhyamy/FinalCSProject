@@ -22,6 +22,9 @@ folder.
 
 After implementing both abstract classes you need to add the appropriate lines in the manager.py file.
 
+## Project architecture 
+![alt text](Project Architecture.jpeg)
+
 
 ## Order Of Operations For Researchers
 1. **After** placing the EEG on the subject open the AvtiView program in the EEG computer and go to the TCP Server tab, 
