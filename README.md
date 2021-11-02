@@ -23,7 +23,7 @@ folder.
 After implementing both abstract classes you need to add the appropriate lines in the manager.py file.
 
 ## Project architecture 
-![alt text](Project Architecture.jpeg)
+![alt text](https://github.com/bhyamy/FinalCSProject/blob/main/Project%20Architecture.jpeg)
 
 
 ## Order Of Operations For Researchers
