@@ -10,8 +10,7 @@
 ![alt text](https://github.com/bhyamy/FinalCSProject/blob/main/Project%20Architecture.jpeg)
 
 ### EEG data server
-In order to be able to get data from the Actiview server in a diffrent computer by direct Ethernet cable (Athena - Venus**??) we had to create a relay server.
-
+In order to be able to get data from the Actiview server in a diffrent computer by direct Ethernet cable (Athena - Venus**??) we had to create a relay server.  
 the EEG data server will get data from the Actiview and transfer it to the decision manager.
 #### TCPIPClientServer.m file
 ```
@@ -42,7 +41,7 @@ In order to configure all the relevent variables in the the Decision process we 
 For starters there is an example in the project called default_confs.yaml, there exists several sections in use currently in the
 project such as [UNITY] - Unity communications configurations, [EEG] - communications confs for the machine delivering the real time data,
 [FORMAT] - format of the messages sent and received through the network (normally don't use anything else) and probably the most useful one
-for now is the [PATH] section that defines the path to the events file, more on that later on.
+for now is the [PATH] section that defines the path to the events file, more on that later on.  
 **ATTENTION** please notice that the configurations supplied do not contradict the hard-coded confs in the TCPIPClientServer.m file
 because these confs cannot be changed during runtime.
 
@@ -61,7 +60,12 @@ folder.
 
 After implementing both abstract classes you need to add the appropriate lines in the manager.py file.
 
+#### Logger
+During runtime the data received and the decisions made are saved in a buffer that will be converted to a text file at the end of every experiment.
+Please notice that it will be saved as *exp_time-CURRENT_DATE* even if the program collapsed.
+
 ### Unity package
+
 
 
 
@@ -100,20 +104,43 @@ and enter the following line "python manager.py ***configurations_file.yaml***" 
 the experiment.
 5. Run VR environment (Unity).
 
-
-
-
 ## What is necessary in the machine running the VR experiment
 On the machine running the VR experiment there is also a python program that, as mentioned earlier, should be activated after everything
 in the data recording side had been completed (put EEG on subject, activate ActiView, run server...), where you should have also a
 decision making and processing paradigms for the incoming data (e.g. FFT processor and a decision maker based off freq. amplitudes, neural network of some sort etc.).
 
-### The aforementioned events file
+## Additional info
+### Existing decision makers
+#### EasyDecision
+
+##### The aforementioned events file
 As a basic decision making paradigm we have created an easyDecision class implementing the DecisionMaker abstract class (see DecisionMaker class instructions above),
 what it does is get a path to a .csv file that contains conditions to the desired amplitudes, in the example the condition is to surpass a certain
 threshold - which FFT is suitable for detecting.
 The decisions are then sent to the Unity process as a list of tuples of *(object, value, time-stamp)*; *object* can be a sound/light source or anything similar, *value* is the desired value/change in value for the object based on the condition that was met and *time-stamp* is for verification.
 
+### Existing processors
+#### rawDataProcessor
+
+#### FFTProcessor
+
+### Testers (owr tests)
+
+### Setting up EEG connection
+
+
+## Future Directions
+
+
+
+
+
+
+
+
+
+
+### runing the program
 As mentioned earlier to run the program perform one of the following:
 1. Open the command line windows-key+r then type cmd and press enter, then run the command 'cd *ABSOLUTE_PATH_TO_FOLDER_CONTAINING_THE_PROGRAM*', unless the console is already in the folder, finally run the command mentioned above.
 2. Go to the folder containing the program and at the top left side of the file explorer click the FILE tab and run the powershell (if the process won't run
@@ -122,18 +149,6 @@ normally run it as an administrator) the run the command mentioned above.
 ### Verbosity for error handling or data viewing
 If you want to see the errors occurring or data transferred during runtime run the command with one of the following flags '-v' or '--verbose'.
 
-## Logger
-During runtime the data received and the decisions made are saved in a buffer that will be converted to a text file at the end of every experiment.
-Please notice that it will be saved as *exp_time-CURRENT_DATE* even if the program collapsed.
-
 ###### Additional details
 More information regarding the flow of the program, such as architechture and object relations, will be provided in a separate file.
-
-
-
-
-
-
-
-
 
