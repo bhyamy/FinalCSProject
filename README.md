@@ -40,6 +40,7 @@ In order for the BCI to work it is needed to implemnt in python a DecisionMaker 
 method analyze() that receives as an argument processed data (more on that following), there is an example of how to
 do that under the Manager/DecisionMaker folder (EasyDecision class), this method represents the way the processed data
 is analyzed into decisions/actions in the VR environment.
+The black box may be anything like the example EasyDecision class, a Neural Network or any kind of learning algorithm.
 
 #### Processing class
 Another sub-class needed to be implemented is that of the Processor, similarly there is only one method needed to be
