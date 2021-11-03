@@ -32,9 +32,9 @@ machine running the VR.
 When a disconnection request is sent the loop stops and cleans up the file pointers (server and client sockets).
 
 ### Decision manager
-The decision manager is the process responsible for making decisions based on the incoming EEG data.
-Before taking a decission, the recived data will be processed by the configured processor.
-The configured decisionMaker will recive the processed data and will take a decision (what changes need to be made?).
+The decision manager is the process responsible for making decisions based on the incoming EEG data.  
+Before taking a decission, the recived data will be processed by the configured processor.  
+The configured decisionMaker will recive the processed data and will take a decision (what changes need to be made?).  
 After taking a decision the Decision manager will send it to the Unity scene to be executed.
 #### Decision manager configuration
 In order to configure all the relevent variables in the the Decision process we will use a .yaml file.
