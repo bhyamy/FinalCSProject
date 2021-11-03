@@ -6,24 +6,48 @@
 * Unity 2019.x or 2020.x
 
 
-## Decision And Processing Models For IT Technician.
+## Architecture
+![alt text](https://github.com/bhyamy/FinalCSProject/blob/main/Project%20Architecture.jpeg)
 
-### DecisionMaker class
+### EEG data server
+In order to be able to get data from the Actiview server in a diffrent computer by direct Ethernet cable (Athena - Venus**??) we had to create a relay server.
+the EEG data server will get data from the Actiview and transfer it to the decision manager.
+#### TCPIPClientServer.m file
+```
+normal_data = rawData(3,:)*(channels^3) + rawData(2,:)*(channels^2) + rawData(1,:)*channels;
+```
+Turns data received from Actiview server in 3 bytes to 2 bytes data, **ATTENTION** this might be wrong, this is how we were instructed
+in the biosemi
+forum to do it, also this is how the biosemi site delivered an example as to how to perform the conversion.
+Additionally, the subsequent data is in microvolts.
+
+Explanation on what the *while* loop does:
+First a request is sent to the ActiView Server to get the data from the EEG or any other device connected to the biosemi, and then if
+there was a problem
+getting the data a message is displayed in the console where the .m file is running, then it concatenates the current time window to a
+data structure that is
+ultimately a 1 sec time frame of the neurological data recorded that is then sent through the server socket (tcpipServer) to the
+machine running the VR.
+When a disconnection request is sent the loop stops and cleans up the file pointers (server and client sockets).
+
+### Decision manager
+
+
+### Unity package
+
+#### DecisionMaker class
 In order for the BCI to work it is needed to implemnt in python a DecisionMaker sub-class implementing the abstract
 method analyze() that receives as an argument processed data (more on that following), there is an example of how to
 do that under the Manager/DecisionMaker folder (EasyDecision class), this method represents the way the processed data
 is analyzed into decisions/actions in the VR environment.
 
-### Processing class
+#### Processing class
 Another sub-class needed to be implemented is that of the Processor, similarly there is only one method needed to be
 implemented which is the process() method that receives as input the raw data sent from the EEG computer.
 This class represents the way the processing of the data is performed, there are 2 examples within the Manager/Processing
 folder.
 
 After implementing both abstract classes you need to add the appropriate lines in the manager.py file.
-
-## Project architecture 
-![alt text](https://github.com/bhyamy/FinalCSProject/blob/main/Project%20Architecture.jpeg)
 
 
 ## Order Of Operations For Researchers
@@ -60,7 +84,10 @@ and enter the following line "python manager.py ***configurations_file.yaml***" 
 the experiment.
 5. Run VR environment (Unity).
 
-## How to create a .yaml confs file
+## Decision manager configuration
+In order to configure all the relevent variables in the the Decision process we will use a .yaml file.
+
+### How to create a .yaml confs file
 For starters there is an example in the project called default_confs.yaml, there exists several sections in use currently in the
 project such as [UNITY] - Unity communications configurations, [EEG] - communications confs for the machine delivering the real time data,
 [FORMAT] - format of the messages sent and received through the network (normally don't use anything else) and probably the most useful one
@@ -68,23 +95,8 @@ for now is the [PATH] section that defines the path to the events file, more on 
 **ATTENTION** please notice that the configurations supplied do not contradict the hard-coded confs in the TCPIPClientServer.m file
 because these confs cannot be changed during runtime.
 
-## Explanation about the TCPIPClientServer.m file
-```
-normal_data = rawData(3,:)*(channels^3) + rawData(2,:)*(channels^2) + rawData(1,:)*channels;
-```
-Turns data received from Actiview server in 3 bytes to 2 bytes data, **ATTENTION** this might be wrong, this is how we were instructed
-in the biosemi
-forum to do it, also this is how the biosemi site delivered an example as to how to perform the conversion.
-Additionally, the subsequent data is in microvolts.
 
-Explanation on what the *while* loop does:
-First a request is sent to the ActiView Server to get the data from the EEG or any other device connected to the biosemi, and then if
-there was a problem
-getting the data a message is displayed in the console where the .m file is running, then it concatenates the current time window to a
-data structure that is
-ultimately a 1 sec time frame of the neurological data recorded that is then sent through the server socket (tcpipServer) to the
-machine running the VR.
-When a disconnection request is sent the loop stops and cleans up the file pointers (server and client sockets).
+
 
 ## What is necessary in the machine running the VR experiment
 On the machine running the VR experiment there is also a python program that, as mentioned earlier, should be activated after everything
