@@ -11,6 +11,7 @@
 
 ### EEG data server
 In order to be able to get data from the Actiview server in a diffrent computer by direct Ethernet cable (Athena - Venus**??) we had to create a relay server.
+
 the EEG data server will get data from the Actiview and transfer it to the decision manager.
 #### TCPIPClientServer.m file
 ```
@@ -31,9 +32,19 @@ machine running the VR.
 When a disconnection request is sent the loop stops and cleans up the file pointers (server and client sockets).
 
 ### Decision manager
-
-
-### Unity package
+The decision manager is the process responsible for making decisions based on the incoming EEG data.
+Before taking a decission, the recived data will be processed by the configured processor.
+The configured decisionMaker will recive the processed data and will take a decision (what changes need to be made?).
+After taking a decision the Decision manager will send it to the Unity scene to be executed.
+#### Decision manager configuration
+In order to configure all the relevent variables in the the Decision process we will use a .yaml file.
+##### How to create a .yaml confs file
+For starters there is an example in the project called default_confs.yaml, there exists several sections in use currently in the
+project such as [UNITY] - Unity communications configurations, [EEG] - communications confs for the machine delivering the real time data,
+[FORMAT] - format of the messages sent and received through the network (normally don't use anything else) and probably the most useful one
+for now is the [PATH] section that defines the path to the events file, more on that later on.
+**ATTENTION** please notice that the configurations supplied do not contradict the hard-coded confs in the TCPIPClientServer.m file
+because these confs cannot be changed during runtime.
 
 #### DecisionMaker class
 In order for the BCI to work it is needed to implemnt in python a DecisionMaker sub-class implementing the abstract
@@ -49,6 +60,10 @@ This class represents the way the processing of the data is performed, there are
 folder.
 
 After implementing both abstract classes you need to add the appropriate lines in the manager.py file.
+
+### Unity package
+
+
 
 
 ## Order Of Operations For Researchers
@@ -84,17 +99,6 @@ the experiment.
 and enter the following line "python manager.py ***configurations_file.yaml***" where the configurations_file.yaml contains the desired configurations for
 the experiment.
 5. Run VR environment (Unity).
-
-## Decision manager configuration
-In order to configure all the relevent variables in the the Decision process we will use a .yaml file.
-
-### How to create a .yaml confs file
-For starters there is an example in the project called default_confs.yaml, there exists several sections in use currently in the
-project such as [UNITY] - Unity communications configurations, [EEG] - communications confs for the machine delivering the real time data,
-[FORMAT] - format of the messages sent and received through the network (normally don't use anything else) and probably the most useful one
-for now is the [PATH] section that defines the path to the events file, more on that later on.
-**ATTENTION** please notice that the configurations supplied do not contradict the hard-coded confs in the TCPIPClientServer.m file
-because these confs cannot be changed during runtime.
 
 
 
